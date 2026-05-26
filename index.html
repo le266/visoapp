@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Avisos Universitarios</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <h1>Avisos Universitarios</h1>
+
+  </header>
+
+  <main>
+
+    <!-- FILTROS -->
+
+    <section class="filtros">
+
+      <!-- BUSCADOR -->
+
+      <input
+        type="text"
+        id="busqueda"
+        placeholder="Buscar aviso">
+
+      <!-- FILTRO CATEGORIA -->
+
+      <select id="filtroCategoria">
+
+        <option value="Todas">
+          Todas las categorías
+        </option>
+
+        <option value="Académico">
+          Académico
+        </option>
+
+        <option value="Eventos">
+          Eventos
+        </option>
+
+        <option value="Finanzas">
+          Finanzas
+        </option>
+
+      </select>
+
+      <!-- FILTRO PRIORIDAD -->
+
+      <select id="filtroPrioridad">
+
+        <option value="Todas">
+          Todas las prioridades
+        </option>
+
+        <option value="Alta">
+          Alta
+        </option>
+
+        <option value="Media">
+          Media
+        </option>
+
+        <option value="Baja">
+          Baja
+        </option>
+
+      </select>
+
+    </section>
+
+    <!-- LISTADO -->
+
+    <section id="listaAvisos">
+
+    </section>
+
+    <!-- FORMULARIO -->
+
+    <section class="formulario">
+
+      <h2>Nuevo Aviso</h2>
+
+      <input
+        type="text"
+        id="titulo"
+        placeholder="Título">
+
+      <textarea
+        id="descripcion"
+        placeholder="Descripción"></textarea>
+
+      <select id="categoria">
+
+        <option value="Académico">
+          Académico
+        </option>
+
+        <option value="Eventos">
+          Eventos
+        </option>
+
+        <option value="Finanzas">
+          Finanzas
+        </option>
+
+      </select>
+
+      <select id="prioridad">
+
+        <option value="Alta">
+          Alta
+        </option>
+
+        <option value="Media">
+          Media
+        </option>
+
+        <option value="Baja">
+          Baja
+        </option>
+
+      </select>
+
+      <button id="btnAgregar">
+        Guardar Aviso
+      </button>
+
+      <p id="mensaje"></p>
+
+    </section>
+
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+
+</body>
+
+</html>
