@@ -1,146 +1,232 @@
-let avisos = JSON.parse(localStorage.getItem("avisos")) || seedAvisos;
+let avisos = JSON.parse(
+  localStorage.getItem("avisos")
+) || [];
 
-const listaAvisos = document.getElementById("listaAvisos");
-const busqueda = document.getElementById("busqueda");
-const filtroCategoria = document.getElementById("filtroCategoria");
-const filtroPrioridad = document.getElementById("filtroPrioridad");
-const btnAgregar = document.getElementById("btnAgregar");
-const mensaje = document.getElementById("mensaje");
+const listaAvisos =
+document.getElementById("listaAvisos");
 
-function guardarLocal() {
-  localStorage.setItem("avisos", JSON.stringify(avisos));
-}
+const busqueda =
+document.getElementById("busqueda");
 
-function generarId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-}
+const filtroCategoria =
+document.getElementById("filtroCategoria");
 
-function obtenerClasePrioridad(prioridad) {
-  if (prioridad === "Alta") return "alta";
-  if (prioridad === "Media") return "media";
-  return "baja";
-}
+const filtroPrioridad =
+document.getElementById("filtroPrioridad");
 
-function mostrarAvisos(lista) {
-  listaAvisos.innerHTML = "";
+const btnAgregar =
+document.getElementById("btnAgregar");
 
-  if (lista.length === 0) {
-    listaAvisos.innerHTML = "<p>No hay avisos para mostrar.</p>";
-    return;
-  }
+const mensaje =
+document.getElementById("mensaje");
 
-  const ordenados = [...lista].sort((a, b) =>
-    a.titulo.localeCompare(b.titulo)
+function guardarLocal(){
+
+  localStorage.setItem(
+    "avisos",
+    JSON.stringify(avisos)
   );
 
-  ordenados.forEach((aviso) => {
+}
+
+function mostrarAvisos(lista){
+
+  listaAvisos.innerHTML = "";
+
+  lista.forEach((aviso, index) => {
+
     const card = document.createElement("div");
+
     card.classList.add("card");
 
+    let clasePrioridad = "";
+
+    if(aviso.prioridad === "Alta"){
+
+      clasePrioridad = "alta";
+
+    }
+
+    else if(aviso.prioridad === "Media"){
+
+      clasePrioridad = "media";
+
+    }
+
+    else{
+
+      clasePrioridad = "baja";
+
+    }
+
     card.innerHTML = `
+
       <h3>${aviso.titulo}</h3>
+
       <p>${aviso.descripcion}</p>
-      <p><strong>Categoría:</strong> ${aviso.categoria}</p>
-      <p class="${obtenerClasePrioridad(aviso.prioridad)}">
-        <strong>Prioridad:</strong> ${aviso.prioridad}
+
+      <p>
+
+        <strong>Categoría:</strong>
+
+        ${aviso.categoria}
+
       </p>
-      <button onclick="mostrarDetalle('${aviso.id}')">Ver detalle</button>
-      <button onclick="eliminarAviso('${aviso.id}')">Eliminar</button>
+
+      <p class="${clasePrioridad}">
+
+        <strong>Prioridad:</strong>
+
+        ${aviso.prioridad}
+
+      </p>
+
+      <button onclick="eliminarAviso(${index})">
+
+        Eliminar
+
+      </button>
+
     `;
 
     listaAvisos.appendChild(card);
+
   });
+
 }
 
-function aplicarFiltros() {
-  const texto = busqueda.value.toLowerCase().trim();
-  const categoria = filtroCategoria.value;
-  const prioridad = filtroPrioridad.value;
+mostrarAvisos(avisos);
 
-  const filtrados = avisos.filter((aviso) => {
-    const coincideTexto =
-      aviso.titulo.toLowerCase().includes(texto) ||
-      aviso.descripcion.toLowerCase().includes(texto);
+busqueda.addEventListener("change", () => {
 
-    const coincideCategoria =
-      categoria === "Todas" || aviso.categoria === categoria;
+  const prioridad = busqueda.value;
 
-    const coincidePrioridad =
-      prioridad === "Todas" || aviso.prioridad === prioridad;
+  if(prioridad === ""){
 
-    return coincideTexto && coincideCategoria && coincidePrioridad;
-  });
+    mostrarAvisos(avisos);
+
+  }
+
+  else{
+
+    const filtrados = avisos.filter(aviso =>
+
+      aviso.prioridad === prioridad
+
+    );
+
+    mostrarAvisos(filtrados);
+
+  }
+
+});
+
+filtroCategoria.addEventListener(
+  "change",
+  filtrarAvisos
+);
+
+filtroPrioridad.addEventListener(
+  "change",
+  filtrarAvisos
+);
+
+function filtrarAvisos(){
+
+  const categoria =
+  filtroCategoria.value;
+
+  const prioridad =
+  filtroPrioridad.value;
+
+  let filtrados = avisos;
+
+  if(categoria !== "Todas"){
+
+    filtrados = filtrados.filter(aviso =>
+
+      aviso.categoria === categoria
+
+    );
+
+  }
+
+  if(prioridad !== "Todas"){
+
+    filtrados = filtrados.filter(aviso =>
+
+      aviso.prioridad === prioridad
+
+    );
+
+  }
 
   mostrarAvisos(filtrados);
+
 }
 
-function validarAviso(titulo, descripcion) {
-  if (titulo.trim().length < 5) {
-    return "El título debe tener mínimo 5 caracteres";
-  }
+btnAgregar.addEventListener("click", () => {
 
-  if (descripcion.trim().length < 10) {
-    return "La descripción debe tener mínimo 10 caracteres";
-  }
+  const titulo =
+  document.getElementById("titulo").value;
 
-  return "";
-}
+  const descripcion =
+  document.getElementById("descripcion").value;
 
-function agregarAviso() {
-  const titulo = document.getElementById("titulo").value;
-  const descripcion = document.getElementById("descripcion").value;
-  const categoria = document.getElementById("categoria").value;
-  const prioridad = document.getElementById("prioridad").value;
+  const categoria =
+  document.getElementById("categoria").value;
+
+  const prioridad =
+  document.getElementById("prioridad").value;
 
   mensaje.textContent = "";
 
-  const error = validarAviso(titulo, descripcion);
+  if(titulo.length < 5){
 
-  if (error) {
-    mensaje.textContent = error;
+    mensaje.textContent =
+    "El título debe tener mínimo 5 caracteres";
+
     return;
+
+  }
+
+  if(descripcion.length < 10){
+
+    mensaje.textContent =
+    "La descripción debe tener mínimo 10 caracteres";
+
+    return;
+
   }
 
   const nuevoAviso = {
-    id: generarId(),
-    titulo: titulo.trim(),
-    descripcion: descripcion.trim(),
+
+    titulo,
+    descripcion,
     categoria,
     prioridad
+
   };
 
   avisos.push(nuevoAviso);
+
   guardarLocal();
-  mensaje.textContent = "Aviso guardado correctamente";
+
+  mostrarAvisos(avisos);
 
   document.getElementById("titulo").value = "";
+
   document.getElementById("descripcion").value = "";
-  document.getElementById("categoria").value = "Académico";
-  document.getElementById("prioridad").value = "Alta";
 
-  aplicarFiltros();
-}
+});
 
-function eliminarAviso(id) {
-  avisos = avisos.filter((aviso) => aviso.id !== id);
+function eliminarAviso(index){
+
+  avisos.splice(index, 1);
+
   guardarLocal();
-  aplicarFiltros();
+
+  mostrarAvisos(avisos);
+
 }
-
-function mostrarDetalle(id) {
-  const aviso = avisos.find((aviso) => aviso.id === id);
-
-  if (!aviso) return;
-
-  alert(
-    `Título: ${aviso.titulo}\n\nDescripción: ${aviso.descripcion}\n\nCategoría: ${aviso.categoria}\n\nPrioridad: ${aviso.prioridad}`
-  );
-}
-
-btnAgregar.addEventListener("click", agregarAviso);
-busqueda.addEventListener("input", aplicarFiltros);
-filtroCategoria.addEventListener("change", aplicarFiltros);
-filtroPrioridad.addEventListener("change", aplicarFiltros);
-
-mostrarAvisos(avisos);
 // Proyecto AVISOSAP - Aplicaciones Móviles 2026
