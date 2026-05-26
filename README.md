@@ -32,3 +32,5 @@ Permite:
 Abrir el archivo:
 
 index.html
+## Autor
+Desarrollado por le266 - Aplicaciones Móviles 2026
