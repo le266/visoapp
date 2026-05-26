@@ -143,3 +143,4 @@ filtroCategoria.addEventListener("change", aplicarFiltros);
 filtroPrioridad.addEventListener("change", aplicarFiltros);
 
 mostrarAvisos(avisos);
+// Proyecto AVISOSAP - Aplicaciones Móviles 2026
